@@ -11,7 +11,6 @@ mod MockAccount {
 
     #[abi(embed_v0)]
     impl AccountMixinImpl = AccountComponent::AccountMixinImpl<ContractState>;
-
     impl AccountInternalImpl = AccountComponent::InternalImpl<ContractState>;
 
     #[storage]
