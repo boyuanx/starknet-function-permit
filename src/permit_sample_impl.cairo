@@ -31,11 +31,17 @@ mod FunctionPermit {
             let data = *permit.data.at(permit_data_index);
             assert(
                 FunctionPermitConstants::SRC_PERMIT_MAGIC_VALUE == permit.src_permit_magic_value
-                    && src5_selector == data.src5_selector
-                    && params == data.params
-                    && operator == data.operator
-                    && current_timestamp >= data.valid_from
-                    && current_timestamp < data.valid_until,
+                    && (data.src5_selector == src5_selector
+                        || data
+                            .src5_selector == FunctionPermitConstants::SRC_PERMIT_DELEGATE_ALL_FUNCTIONS)
+                    && (data.params == params
+                        || (data.params.len() == 1
+                            && *data
+                                .params
+                                .at(0) == FunctionPermitConstants::SRC_PERMIT_DELEGATE_ALL_PARAMS))
+                    && data.operator == operator
+                    && data.valid_from <= current_timestamp
+                    && data.valid_until > current_timestamp,
                 FunctionPermitConstants::PERMIT_VALIDATION_ERROR
             );
             let permit_hash = self.get_permit_hash(permit);

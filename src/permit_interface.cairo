@@ -23,6 +23,8 @@ pub trait ISRC6<TState> {
 
 pub mod FunctionPermitConstants {
     pub const SRC_PERMIT_MAGIC_VALUE: felt252 = selector!("SRC_PERMIT_MAGIC_VALUE");
+    pub const SRC_PERMIT_DELEGATE_ALL_FUNCTIONS: felt252 = selector!("SRC_PERMIT_DELEGATE_ALL_FUNCTIONS");
+    pub const SRC_PERMIT_DELEGATE_ALL_PARAMS: felt252 = selector!("SRC_PERMIT_DELEGATE_ALL_PARAMS");
     pub const PERMIT_VALIDATION_ERROR: felt252 = 'PERMIT_VALIDATION_ERROR';
     pub const PERMIT_SIGNATURE_ERROR: felt252 = 'PERMIT_SIGNATURE_ERROR';
 }
