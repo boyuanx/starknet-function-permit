@@ -1,13 +1,41 @@
+use core::{hash::{Hash, HashStateTrait, HashStateExTrait}, poseidon::{poseidon_hash_span}};
+use starknet_function_permit::{permit_struct::{Permit, PermitData}};
+
+pub impl HashFelt252Span<S, +HashStateTrait<S>, +Drop<S>> of Hash<Span<felt252>, S> {
+    fn update_state(state: S, value: Span<felt252>) -> S {
+        state.update_with(poseidon_hash_span(value))
+    }
+}
+
+pub impl HashPermitDataSpan<S, +HashStateTrait<S>, +Drop<S>> of Hash<Span<PermitData>, S> {
+    fn update_state(state: S, value: Span<PermitData>) -> S {
+        let value_len = value.len();
+        if value_len == 0 {
+            return state;
+        }
+        let mut i = 1;
+        let mut state_new = state.update_with(*value.at(0));
+        loop {
+            if i == value_len {
+                break;
+            }
+            state_new = state_new.update_with(*value.at(i));
+        };
+        state_new
+    }
+}
+
 #[starknet::contract]
 mod FunctionPermit {
     use starknet::{ContractAddress, get_block_timestamp};
-    use core::{hash::{HashStateTrait, HashStateExTrait}, poseidon::{PoseidonTrait}};
+    use core::{poseidon::{PoseidonTrait}};
     use starknet_function_permit::{
         permit_interface::{
             FunctionPermitConstants, IFunctionPermit, ISRC6Dispatcher, ISRC6DispatcherTrait
         },
-        permit_struct::{Permit, PermitSignature, HashFelt252Span, HashPermitDataSpan}
+        permit_struct::{PermitSignature}
     };
+    use super::{HashStateTrait, HashStateExTrait, Permit};
 
     #[storage]
     struct Storage {}

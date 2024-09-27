@@ -3,7 +3,6 @@ use snforge_std::{
     declare, ContractClassTrait, DeclareResultTrait,
     signature::{KeyPairTrait, stark_curve::{StarkCurveKeyPairImpl, StarkCurveSignerImpl}}
 };
-use openzeppelin::account::interface::{AccountABISafeDispatcher};
 use starknet_function_permit::{
     permit_interface::{
         FunctionPermitConstants, IFunctionPermitSafeDispatcher, IFunctionPermitSafeDispatcherTrait
@@ -25,9 +24,6 @@ fn test_permit() {
     /// Initializing MockAccount and Permit sample implementation
     let key_pair = KeyPairTrait::<felt252, felt252>::generate();
     let account_contract_address = deploy_contract("MockAccount", array![key_pair.public_key]);
-    let account_dispatcher = AccountABISafeDispatcher {
-        contract_address: account_contract_address
-    };
     let permit_contract_address = deploy_contract("FunctionPermit", array![]);
     let permit_dispatcher = IFunctionPermitSafeDispatcher {
         contract_address: permit_contract_address
